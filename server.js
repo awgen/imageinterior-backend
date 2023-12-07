@@ -464,6 +464,16 @@ app.delete('/assign/all/:id', (req, res) => {
     })
 })
 
+app.delete('/assign/all/:projID', (req, res) => {
+    const projID = req.params.projID
+    db.query("DELETE FROM assigning WHERE projID = ?",[projID], (err, result) => {
+        if(!err) 
+        res.send('Deleted Successfully')
+        else
+        console.log(err)
+    })
+})
+
 app.post("/collabupload", (req, res) => {
 
     const filename = req.body.filename
