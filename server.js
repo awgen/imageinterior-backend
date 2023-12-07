@@ -464,7 +464,17 @@ app.delete('/assign/all/:id', (req, res) => {
     })
 })
 
-app.delete('/assign/all/:projID', (req, res) => {
+app.get('/assign/all/projectID/:projID', (req, res) => {
+    const projID = req.params.projID
+    db.query('SELECT *  FROM assigning WHERE projID = ?', [projID],(err, result) => {
+        if (!err) 
+            res.send(result);
+        else
+            console.log(err);
+    });
+});
+
+app.delete('/assign/all/projectID/:projID', (req, res) => {
     const projID = req.params.projID
     db.query("DELETE FROM assigning WHERE projID = ?",[projID], (err, result) => {
         if(!err) 
