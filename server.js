@@ -167,21 +167,18 @@ app.post('/login', async (req, res) => {
         const password = req.body.password;
         const email = req.body.email;
 
-        const user = await db.query(
+        const user =  db.query(
             "SELECT * FROM imageusers WHERE email = ? AND password = ?", 
             [email, password]
         );
 
         if (user.length > 0) {
-            const passwordMatch = await bcrypt.compare(password, user[0].password);
-            if (passwordMatch) {
+          
                 res.json({
                     role: user[0].role,
                     username: user[0].username,
                 });
-            } else {
-                res.json({ error: 'Login Failed2' });
-            }
+            
         } else {
             res.json({ error: 'Login Failed1' });
         }
