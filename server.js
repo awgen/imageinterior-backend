@@ -45,7 +45,7 @@ app.post("/register", (req, res) => {
      (err, result) => {
       
         if(err){
-            console.error("Error in /register:", err + hashedPassword);
+            console.error("Error in /register:", hashedPassword);
             return res.status(500).json({ error: "Registration failed" }, );
             
         }else{
