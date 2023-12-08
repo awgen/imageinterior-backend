@@ -4,7 +4,7 @@ const cors = require('cors')
 
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
-const saltRounds = 10;
+
 
 
 
@@ -35,6 +35,8 @@ app.post("/register", (req, res) => {
     const email = req.body.email
     const password = req.body.password
     const role = req.body.role
+
+    const saltRounds = 10;
     const hashedPassword = bcrypt.hash(password, saltRounds);
 
     db.query(
@@ -43,8 +45,9 @@ app.post("/register", (req, res) => {
      (err, result) => {
       
         if(err){
-            console.error("Error in /register:", err);
-            return res.status(500).json({ error: "Registration failed" });
+            console.error("Error in /register:", err + hashedPassword);
+            return res.status(500).json({ error: "Registration failed" }, );
+            
         }else{
             sendEmailVerification(email, password)
         }
