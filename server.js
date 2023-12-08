@@ -163,31 +163,34 @@ app.get('/userlogs/all/:date', (req, res) => {
 // posting logins
 
 app.post('/login', async (req, res) => {  
-    try {
-        const password = req.body.password;
-        const email = req.body.email;
-
-        const user =  db.query(
-            "SELECT * FROM imageusers WHERE email = ? AND password = ?", 
-            [email, password]
-        );
-
-        if (user.length > 0) {
-          
-                res.json({
-                    role: user[0].role,
-                    username: user[0].username,
-                });
+        const email = req.body.email
+        const password = req.body.password
+    
+        db.query(
+        "SELECT * FROM  imageusers WHERE email = ? AND password = ?", 
+        [email, password, role, username],
+         (err, result) => {
             
-        } else {
-            res.json({ error: 'Login Failed1' });
-        }
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
+            if(err) return res.json("LOGIN FAILED");
+            if(result.length > 0){
+                const user = result[0]
+                console.log("Input Password:", password);
+                console.log("Database Password:", user.password);
+               
+                    return res.json({
+                        role: user.role,
+                        username: user.username,
+                        password: user.password
+                      }) 
+                
+                       
 
+            }else{
+                return res.json("Login Failed")
+            }
+    
+        })
+    })
 
 
 // getting all data from imageusers db
