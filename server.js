@@ -177,10 +177,14 @@ app.post('/login', async (req, res) => {
                 const user = result[0]
                 console.log("Input Password:", password);
                 console.log("Database Password:", user.password);
+                const validPassword = bcrypt.compare(password, user.password)
+                if(validPassword){
                     return res.json({
                         role: user.role,
                         username: user.username,
                       }) 
+                }
+                    
             }else{
                 return res.json("Login Failed")
             }
