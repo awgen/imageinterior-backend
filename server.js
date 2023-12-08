@@ -176,14 +176,15 @@ app.post('/login',  (req, res) => {
         if(err) return res.json("LOGIN FAILED");
         if(result.length > 0){
             const user = result[0]
-            const hashedPassword =  user.password
-            const retrievePass =  bcrypt.compare(password, hashedPassword)
-            if(retrievePass){
+            const hashedPassword =  result[0].password
+            bcrypt.compare(password, hashedPassword)
+            .then(res => {
                 return res.json({
                     role: user.role,
                     username: user.username
                 }) 
-            }
+            })
+            
         }else{
             return res.json("Login Failed")
         }
