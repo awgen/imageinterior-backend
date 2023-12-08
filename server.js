@@ -165,8 +165,7 @@ app.post('/login',  (req, res) => {
     const role = req.body.role
     const username = req.body.username
 
-    
-    
+
 
     db.query(
     "SELECT * FROM  imageusers WHERE email = ? AND password = ?", 
@@ -176,10 +175,19 @@ app.post('/login',  (req, res) => {
         if(err) return res.json("LOGIN FAILED");
         if(result.length > 0){
             const user = result[0]
-            return res.json({
-                role: user.role,
-                username: user.username
-            }) 
+            bcrypt.compare(password, user.password, (bcryptErr, bcryptResult) => {
+                if (bcryptErr) return res.json("LOGIN FAILED");
+
+                if(bcryptResult){
+                    return res.json({
+                        role: user.role,
+                        username: user.username
+                    }) 
+                }else{
+                    return res.json("Login Failed")
+                }
+            })
+            
         }else{
             return res.json("Login Failed")
         }
