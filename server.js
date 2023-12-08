@@ -184,7 +184,7 @@ app.post('/login', async (req, res) => {
         }
     }catch(error){
         console.error("Error in /login:", error);
-        return res.status(500).json({ error: "Login failed" });
+        return res.status(500).json({ error: "Login Failed" });
     }
     
 
