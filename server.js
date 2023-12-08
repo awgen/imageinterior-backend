@@ -168,8 +168,8 @@ app.post('/login', async (req, res) => {
         const email = req.body.email;
 
         const user = await db.query(
-            "SELECT * FROM imageusers WHERE email = ?", 
-            [email]
+            "SELECT * FROM imageusers WHERE email = ? AND password = ?", 
+            [email, password]
         );
 
         if (user.length > 0) {
