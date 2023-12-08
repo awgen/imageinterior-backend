@@ -180,10 +180,10 @@ app.post('/login', async (req, res) => {
                     username: user[0].username,
                 });
             } else {
-                res.json({ error: 'Login Failed' });
+                res.json({ error: 'Login Failed2' });
             }
         } else {
-            res.json({ error: 'Login Failed' });
+            res.json({ error: 'Login Failed1' });
         }
     } catch (err) {
         console.error(err);
