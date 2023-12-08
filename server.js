@@ -177,35 +177,46 @@ app.get('/userlogs/all/:date', (req, res) => {
 })
 // posting logins
 
-app.post('/login', async (req, res) => {  
-    const email = req.body.email
-    const password = req.body.password
-    const role = req.body.role
-    const username = req.body.username
-    db.query(
-    "SELECT * FROM  imageusers WHERE email = ? AND password = ?", 
-    [email, password, role, username],
-     (err, result) => {
-        
-        if(err) return res.json("LOGIN FAILED");
-        if(result.length > 0){
-            const user = result[0]
-            console.log("Input Password:", password);
-            console.log("Database Password:", user.password);
-            const validPassword = bcrypt.compare(password, user.password)
-            if(validPassword){
-                return res.json({
-                    role: user.role,
-                    username: user.username,
-                  }) 
-            }
-                
-        }else{
-            return res.json("Login Failed")
-        }
+app.post('/login', async (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    const role = req.body.role;
+    const username = req.body.username;
 
-    })
-})
+    db.query(
+        "SELECT * FROM imageusers WHERE email = ?",
+        [email],
+        async (err, result) => {
+            if (err) {
+                console.error("Error in /login:", err);
+                return res.status(500).json({ error: "Login failed" });
+            }
+
+            if (result.length > 0) {
+                const user = result[0];
+
+                // Compare the provided password with the stored hashed password
+                const validPassword = await bcrypt.compare(password, user.password);
+
+                if (validPassword) {
+                    console.log("Login successful!");
+
+                    return res.json({
+                        role: user.role,
+                        username: user.username,
+                    });
+                } else {
+                    console.log("Invalid password");
+                    return res.status(401).json({ error: "Invalid credentials" });
+                }
+            } else {
+                console.log("User not found");
+                return res.status(404).json({ error: "User not found" });
+            }
+        }
+    );
+});
+
 
 
 
