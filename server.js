@@ -217,7 +217,7 @@ app.post('/login', async (req, res) => {
                 }
             } else {
                 console.log("User not found");
-                return res.status(404).json({ error: "User not found" });
+                return res.json("User not found");
             }
         }
     );
