@@ -166,9 +166,11 @@ app.get('/userlogs/all/:date', (req, res) => {
 app.post('/login', async (req, res) => {  
     const email = req.body.email;
     const password = req.body.password;
+    const role = req.body.role
+    const username = req.body.username
 
     try {
-        const result = await db.query("SELECT * FROM imageusers WHERE email = ?", [email]);
+        const result = await db.query("SELECT * FROM imageusers WHERE email = ?", [email, password, role, username]);
 
         if (result.length > 0) {
             const user = result[0];
