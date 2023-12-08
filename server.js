@@ -163,9 +163,6 @@ app.get('/userlogs/all/:date', (req, res) => {
 // posting logins
 
 
-
-const bcrypt = require('bcrypt');
-
 app.post('/login', async (req, res) => {  
     const email = req.body.email;
     const password = req.body.password;
