@@ -172,7 +172,6 @@ app.post('/login', async (req, res) => {
     try {
         const result = await db.query("SELECT * FROM imageusers WHERE email = ?", [email]);
 
-        if (result.length > 0) {
             const user = result[0];
             console.log("Input Password:", password);
             console.log("Database Password:", user.password);
@@ -187,9 +186,7 @@ app.post('/login', async (req, res) => {
             } else {
                 return res.json("Login Failed");
             }
-        } else {
-            return res.json("Login Failed");
-        }
+       
     } catch (err) {
         console.error(err);
         return res.json("LOGIN FAILED");
