@@ -25,8 +25,7 @@ const db = mysql.createConnection({
 
 // getting user logs
 
-// posting register
-app.post("/register", async (req, res) => { 
+app.post("/register", async (req, res) => {
     const firstname = req.body.firstname
     const lastname = req.body.lastname
     const username = req.body.username
@@ -36,28 +35,44 @@ app.post("/register", async (req, res) => {
     const password = req.body.password
     const role = req.body.role
 
-    const saltRounds = await bcrypt.genSalt();
+    const saltRounds = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     db.query(
-    "INSERT INTO imageusers (firstname, lastname, username, contact, datebirth, email, password, role) VALUES (? ,?, ? ,?, ?, ?, ?, ?)", 
-    [firstname,lastname,username,contact,datebirth, email, hashedPassword, role],
-     (err, result) => {
-      
-        if(err){
-            console.error("Error in /register:", hashedPassword);
-            return res.status(500).json({ error: "Registration failed" }, );
-            
-        }else{
-            sendEmailVerification(email, password)
-            console.log("The plain passowrd: ", password)
-            console.log('Hasde pass', hashedPassword);
-        }
-    })
-   
+        "INSERT INTO imageusers (firstname, lastname, username, contact, datebirth, email, password, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        [firstname, lastname, username, contact, datebirth, email, hashedPassword, role],
+        (err, result) => {
+            if (err) {
+                console.error("Error in /register:", hashedPassword);
+                return res.status(500).json({ error: "Registration failed" });
+            } else {
+                // Log the plain and hashed passwords
+                console.log("The plain password:", password);
+                console.log("Hashed password:", hashedPassword);
 
-    return res.json("Registration successful");
-})
+                // Check if the password matches the hashed password
+                bcrypt.compare(password, hashedPassword, (compareErr, compareResult) => {
+                    if (compareErr) {
+                        console.error("Error comparing passwords:", compareErr);
+                        return res.status(500).json({ error: "Registration failed" });
+                    }
+
+                    if (compareResult) {
+                        // Passwords match, you can log or perform additional actions here
+                        console.log("Password and hashed password match!");
+                    } else {
+                        console.log("Password and hashed password do not match.");
+                    }
+
+                    // Continue with the rest of your logic
+                    sendEmailVerification(email, password);
+                    res.status(200).json({ success: "Registration successful" });
+                });
+            }
+        }
+    );
+});
+
 app.put('/all/new-password/:username', (req, res) => {
     const username = req.params.username
     const newpassword = req.body.newpassword
