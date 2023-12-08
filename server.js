@@ -165,7 +165,8 @@ app.get('/userlogs/all/:date', (req, res) => {
 app.post('/login', async (req, res) => {  
         const email = req.body.email
         const password = req.body.password
-    
+        const role = req.body.role
+        const username = req.body.username
         db.query(
         "SELECT * FROM  imageusers WHERE email = ? AND password = ?", 
         [email, password, role, username],
@@ -176,15 +177,10 @@ app.post('/login', async (req, res) => {
                 const user = result[0]
                 console.log("Input Password:", password);
                 console.log("Database Password:", user.password);
-               
                     return res.json({
                         role: user.role,
                         username: user.username,
-                        password: user.password
                       }) 
-                
-                       
-
             }else{
                 return res.json("Login Failed")
             }
