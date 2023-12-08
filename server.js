@@ -162,35 +162,40 @@ app.get('/userlogs/all/:date', (req, res) => {
 })
 // posting logins
 
+const bcrypt = require('bcrypt');
+
 app.post('/login', async (req, res) => {  
-        const email = req.body.email
-        const password = req.body.password
-        const role = req.body.role
-        const username = req.body.username
-        db.query(
-        "SELECT * FROM  imageusers WHERE email = ? AND password = ?", 
-        [email, password, role, username],
-         (err, result) => {
-            
-            if(err) return res.json("LOGIN FAILED");
-            if(result.length > 0){
-                const user = result[0]
-                console.log("Input Password:", password);
-                console.log("Database Password:", user.password);
-                const validPassword = bcrypt.compare(password, user.password)
-                if(validPassword){
-                    return res.json({
-                        role: user.role,
-                        username: user.username,
-                      }) 
-                }
-                    
-            }else{
-                return res.json("Login Failed")
+    const email = req.body.email;
+    const password = req.body.password;
+  
+
+    try {
+        const result = await db.query("SELECT * FROM imageusers WHERE email = ?", [email]);
+
+        if (result.length > 0) {
+            const user = result[0];
+            console.log("Input Password:", password);
+            console.log("Database Password:", user.password);
+
+            const validPassword = await bcrypt.compare(password, user.password);
+
+            if (validPassword) {
+                return res.json({
+                    role: user.role,
+                    username: user.username,
+                });
+            } else {
+                return res.json("Login Failed");
             }
-    
-        })
-    })
+        } else {
+            return res.json("Login Failed");
+        }
+    } catch (err) {
+        console.error(err);
+        return res.json("LOGIN FAILED");
+    }
+});
+
 
 
 // getting all data from imageusers db
