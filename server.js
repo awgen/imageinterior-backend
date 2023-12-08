@@ -159,35 +159,32 @@ app.get('/userlogs/all/:date', (req, res) => {
     })
 })
 // posting logins
-app.post('/login', async (req, res) => {  
+app.post('/login',  (req, res) => {  
     const email = req.body.email
     const password = req.body.password
     const role = req.body.role
     const username = req.body.username
 
-    try{
-        const result = await db.query("SELECT * FROM  imageusers WHERE email = ? AND password = ?", 
-        [email, password, role, username])
-        if(result === 0) {
-            return res.status(401).json({ error: "Login Failed" });
-        }
-        const user = result[0]
-        const hashedPassword =  user.password
-        const passwordMatch = await bcrypt.compare(password, hashedPassword);
-        if(passwordMatch){
+    
+    
+
+    db.query(
+    "SELECT * FROM  imageusers WHERE email = ? AND password = ?", 
+    [email, password, role, username],
+     (err, result) => {
+        
+        if(err) return res.json("LOGIN FAILED");
+        if(result.length > 0){
+            const user = result[0]
             return res.json({
                 role: user.role,
                 username: user.username
-            });
+            }) 
         }else{
-            return res.status(401).json({ error: "Login Failed" });
+            return res.json("Login Failed")
         }
-    }catch(error){
-        console.error("Error in /login:", error);
-        return res.status(500).json({ error: "Login Failed" });
-    }
-    
 
+    })
 })
 // getting all data from imageusers db
 app.get("/all", (req, res) => {
