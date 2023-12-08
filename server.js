@@ -160,7 +160,7 @@ app.get('/userlogs/all/:date', (req, res) => {
 })
 // posting logins
 
-    app.post('/login',  (req, res) => {  
+app.post('/login',  (req, res) => {  
         const email = req.body.email
         const password = req.body.password
         const role = req.body.role
@@ -175,10 +175,18 @@ app.get('/userlogs/all/:date', (req, res) => {
             if(err) return res.json("LOGIN FAILED");
             if(result.length > 0){
                 const user = result[0]
-                return res.json({
-                    role: user.role,
-                      username: user.username
-                    }) 
+                bcrypt.compare(password, user.password, (err, result) => {
+                    if(err) return res.json("LOGIN FAILED");
+                    if(result){
+                        return res.json({
+                            role: user.role,
+                              username: user.username
+                            }) 
+                    }else{
+                        return res.json("Login Failed");
+                    }
+                })
+                
 
             }else{
                 return res.json("Login Failed")
