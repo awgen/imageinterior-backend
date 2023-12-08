@@ -177,19 +177,11 @@ app.post('/login',  (req, res) => {
                 const user = result[0]
                 console.log("Input Password:", password);
                 console.log("Database Password:", user.password);
-                bcrypt.compare(password, user.password, (err, result) => {
-                    console.log('result:', result)
-                    if(err) return res.json("LOGIN FAILED");
-                    if(result){
+
                         return res.json({
                               role: user.role,
                               username: user.username
                             }) 
-                    }else{
-                        return res.json("Login Failed");
-                    }
-                })
-                
 
             }else{
                 return res.json("Login Failed")
