@@ -26,7 +26,7 @@ const db = mysql.createConnection({
 // getting user logs
 
 // posting register
-app.post("/register", (req, res) => { 
+app.post("/register", async (req, res) => { 
     const firstname = req.body.firstname
     const lastname = req.body.lastname
     const username = req.body.username
@@ -36,8 +36,8 @@ app.post("/register", (req, res) => {
     const password = req.body.password
     const role = req.body.role
 
-    const saltRounds = bcrypt.genSalt();
-    const hashedPassword = bcrypt.hash(password, saltRounds);
+    const saltRounds = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     db.query(
     "INSERT INTO imageusers (firstname, lastname, username, contact, datebirth, email, password, role) VALUES (? ,?, ? ,?, ?, ?, ?, ?)", 
