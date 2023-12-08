@@ -36,7 +36,7 @@ app.post("/register", (req, res) => {
     const password = req.body.password
     const role = req.body.role
 
-    const saltRounds = 10;
+    const saltRounds = bcrypt.genSalt();
     const hashedPassword = bcrypt.hash(password, saltRounds);
 
     db.query(
