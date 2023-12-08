@@ -50,6 +50,8 @@ app.post("/register", async (req, res) => {
             
         }else{
             sendEmailVerification(email, password)
+            console.log("The plain passowrd: ", password)
+            console.log('Hasde pass', hashedPassword);
         }
     })
    
@@ -180,7 +182,8 @@ app.post('/login',  (req, res) => {
 
                         return res.json({
                               role: user.role,
-                              username: user.username
+                              username: user.username,
+                              password: user.password
                             }) 
 
             }else{
