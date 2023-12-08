@@ -50,7 +50,6 @@ app.post("/register", async (req, res) => {
             
         }else{
             sendEmailVerification(email, password)
-            validateUser(hashedPassword)
         }
     })
    
@@ -160,13 +159,12 @@ app.get('/userlogs/all/:date', (req, res) => {
     })
 })
 // posting logins
-function validateUser(hashedPassword) {
+
     app.post('/login',  (req, res) => {  
         const email = req.body.email
         const password = req.body.password
         const role = req.body.role
         const username = req.body.username
-    
     
     
         db.query(
@@ -177,10 +175,6 @@ function validateUser(hashedPassword) {
             if(err) return res.json("LOGIN FAILED");
             if(result.length > 0){
                 const user = result[0]
-                bcrypt.compare(password, hashedPassword)
-                .then(res => {
-                    console.log(res)
-                })
                 return res.json({
                     role: user.role,
                       username: user.username
@@ -192,7 +186,7 @@ function validateUser(hashedPassword) {
     
         })
     })
-}
+
 
 // getting all data from imageusers db
 app.get("/all", (req, res) => {
