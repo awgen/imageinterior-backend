@@ -1,8 +1,10 @@
 const express = require('express')
 const mysql = require('mysql')
 const cors = require('cors')
-const path = require('path');
+
 const nodemailer = require('nodemailer');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 
 
@@ -33,11 +35,11 @@ app.post("/register", (req, res) => {
     const email = req.body.email
     const password = req.body.password
     const role = req.body.role
-
+    const hashedPassword = bcrypt.hash(password, saltRounds);
 
     db.query(
     "INSERT INTO imageusers (firstname, lastname, username, contact, datebirth, email, password, role) VALUES (? ,?, ? ,?, ?, ?, ?, ?)", 
-    [firstname,lastname,username,contact,datebirth, email, password, role],
+    [firstname,lastname,username,contact,datebirth, email, hashedPassword, role],
      (err, result) => {
       
         if(err){
