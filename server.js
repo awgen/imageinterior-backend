@@ -159,11 +159,16 @@ app.get('/userlogs/all/:date', (req, res) => {
     })
 })
 // posting logins
-app.post('/login', (req, res) => {  
+app.post('/login',  (req, res) => {  
     const email = req.body.email
     const password = req.body.password
     const role = req.body.role
     const username = req.body.username
+
+    const hashedPassword =  result[0].password
+
+    const retrievePass =  bcrypt.compare(password, hashedPassword)
+
     db.query(
     "SELECT * FROM  imageusers WHERE email = ? AND password = ?", 
     [email, password, role, username],
@@ -176,7 +181,10 @@ app.post('/login', (req, res) => {
                 role: user.role,
                 username: user.username
             }) 
-        }else{
+        }else if(retrievePass){
+            return res.json({message: 'Login Successful'})
+        }
+        else{
             return res.json("Login Failed")
         }
 
