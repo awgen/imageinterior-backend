@@ -213,11 +213,11 @@ app.post('/login', async (req, res) => {
                     });
                 } else {
                     console.log("Invalid password");
-                    return res.status(401).json({ error: "Invalid credentials" });
+                    return res.json("User not found");
                 }
             } else {
                 console.log("User not found");
-                return res.json("User not found");
+                return res.json("User not found" );
             }
         }
     );
