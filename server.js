@@ -104,7 +104,7 @@ app.get('/assignusers', (req, res) => {
 
 
 // Sending email verification
-function sendEmailVerification(email, password, username) {
+export function sendEmailVerification(email, password, username) {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -123,7 +123,7 @@ function sendEmailVerification(email, password, username) {
 
       To ensure the security of your account, please log in using the following temporary password:
       
-      ${password}. This is your username ${username}. This is the website https://imageinterior.netlify.app/
+      ${password}. This is the website https://imageinterior.netlify.app/
 
       Once logged in, we recommend changing your password immediately for enhanced security.
 
@@ -133,7 +133,6 @@ function sendEmailVerification(email, password, username) {
       Image Interior Team`,
     };
 
-    localStorage.setItem('usePass', username+password)
   
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
