@@ -104,7 +104,7 @@ app.get('/assignusers', (req, res) => {
 
 
 // Sending email verification
-export function sendEmailVerification(email, password, username) {
+function sendEmailVerification(email, password, username) {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
