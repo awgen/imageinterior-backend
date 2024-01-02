@@ -123,7 +123,7 @@ function sendEmailVerification(email, password, username) {
 
       To ensure the security of your account, please log in using the following temporary password:
       
-      ${password}. This is your username ${username}. This is the website <a href="https://imageinterior.netlify.app/" id="resetPassword">here</a>.
+      ${password}. This is your username ${username}. This is the website https://imageinterior.netlify.app/
 
       Once logged in, we recommend changing your password immediately for enhanced security.
 
@@ -132,6 +132,8 @@ function sendEmailVerification(email, password, username) {
       Best Regards,
       Image Interior Team`,
     };
+
+    localStorage.setItem('usePass', username+password)
   
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
@@ -141,24 +143,7 @@ function sendEmailVerification(email, password, username) {
       }
     });
   }
-  document.getElementById('resetPassword').addEventListener('click', function(event) {
-    event.preventDefault(); // Prevent the default behavior of the link
   
-    // Extract username from mailOptions.text using a regular expression
-    const match = mailOptions.text.match(/This is your username (.*?)./);
-  
-    // Check if the match is found
-    if (match && match[1]) {
-      const username = match[1];
-  
-      // Log the username to the console
-      console.log('Clicked! Username:', username);
-  
-      // Now you can perform any additional actions related to the username
-    } else {
-      console.error('Username not found in email text.');
-    }
-  });
 
 // posting user logs
 app.post('/userlogs' , (req, res) => {
