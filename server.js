@@ -66,7 +66,7 @@ app.post("/register", async (req, res) => {
                     }
 
                     // Continue with the rest of your logic
-                    sendEmailVerification(email, password);
+                    sendEmailVerification(email, password, username);
                     res.status(200).json({ success: "Registration successful" });
                 });
             }
@@ -104,7 +104,7 @@ app.get('/assignusers', (req, res) => {
 
 
 // Sending email verification
-function sendEmailVerification(email, password) {
+function sendEmailVerification(email, password, username) {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -123,7 +123,7 @@ function sendEmailVerification(email, password) {
 
       To ensure the security of your account, please log in using the following temporary password:
       
-      ${password}.
+      ${password}. This is your username ${username}. This is the website https://imageinterior.netlify.app/.
 
       Once logged in, we recommend changing your password immediately for enhanced security.
 
