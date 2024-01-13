@@ -183,7 +183,7 @@ app.get('/userlogs/all/:date', (req, res) => {
         console.log(err)
     })
 })
-app.get('userlogs/all/range/:startdate/:enddate', (req, res) => {
+app.get('/userlogs/all/range/:startdate/:enddate', (req, res) => {
     db.query("SELECT * FROM `userlogs` WHERE date BETWEEN ? AND ?", [req.params.startdate, req.params.enddate], (err, result) => {
         if(!err) 
         res.send(result)
