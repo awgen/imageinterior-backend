@@ -1,9 +1,10 @@
 const express = require('express')
 const mysql = require('mysql')
 const cors = require('cors')
-
+const multer = require('multer');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
+
 const upload = multer({ dest: 'uploads/' });
 
 
