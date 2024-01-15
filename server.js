@@ -80,7 +80,7 @@ app.post('/tools', (req, res) => {
     const logoDescrip = req.body.logodescrip
     const logoURL = req.body.logourl
 
-    db.query("INSERT INTO tools (logo, logo-name, logo-descrip, logo-url) VALUES (?, ?, ?, ?)", 
+    db.query("INSERT INTO tools (logo, logoname, logodescrip, logourl) VALUES (?, ?, ?, ?)", 
     [logo, logoName, logoDescrip, logoURL], 
     (err, result) => {
         console.error(err)
