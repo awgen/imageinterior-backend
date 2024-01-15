@@ -4,8 +4,7 @@ const cors = require('cors')
 const multer = require('multer');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
-
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: 'uploads/' })
 
 
 
@@ -75,11 +74,12 @@ app.post("/register", async (req, res) => {
     );
 });
 
-app.post('/tools', upload.single('logo'), (req, res) => {
-    const logo = req.file.path
+app.post('/tools', upload.single('logoImage'), (req, res) => {
+    const logo = req.file
     const logoName = req.body.logoname
     const logoDescrip = req.body.logodescrip
     const logoURL = req.body.logourl
+    console.log(logo)
 
     db.query("INSERT INTO tools (logo, logoname, logodescrip, logourl) VALUES (?, ?, ?, ?)", 
     [logo, logoName, logoDescrip, logoURL], 
