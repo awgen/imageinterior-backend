@@ -4,7 +4,7 @@ const cors = require('cors')
 
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
-
+const upload = multer({ dest: 'uploads/' });
 
 
 
@@ -74,8 +74,8 @@ app.post("/register", async (req, res) => {
     );
 });
 
-app.post('/tools', (req, res) => {
-    const logo = req.body.logo
+app.post('/tools', upload.single('logo'), (req, res) => {
+    const logo = req.file.path
     const logoName = req.body.logoname
     const logoDescrip = req.body.logodescrip
     const logoURL = req.body.logourl
