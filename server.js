@@ -74,15 +74,18 @@ app.post("/register", async (req, res) => {
     );
 });
 
-app.post('/tools', upload.single('logo'), (req, res) => {
+app.post('/tools', (req, res) => {
     const logo = req.body.logo
     const logoName = req.body.logoname
     const logoDescrip = req.body.logodescrip
     const logoURL = req.body.logourl
+    const fileType = req.body.filetype
+    const fileSize = req.body.filesize
+
     console.log(logo)
 
-    db.query("INSERT INTO tools (logo, logoname, logodescrip, logourl) VALUES (?, ?, ?, ?)", 
-    [logo, logoName, logoDescrip, logoURL], 
+    db.query("INSERT INTO tools (logo, logoname, logodescrip, logourl, filetype, filesize) VALUES (?, ?, ?, ?, ?, ?)", 
+    [logo, logoName, logoDescrip, logoURL, fileType, fileSize], 
     (err, result) => {
         console.error(err)
     })
