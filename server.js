@@ -74,6 +74,27 @@ app.post("/register", async (req, res) => {
     );
 });
 
+app.post('/tools', (req, res) => {
+    const logo = req.body.logo
+    const logoName = req.body.logoname
+    const logoDescrip = req.body.logodescrip
+    const logoURL = req.body.logourl
+
+    db.query("INSERT INTO tools (logo, logo-name, logo-descrip, logo-url) VALUES (?, ?, ?, ?)", 
+    [logo, logoName, logoDescrip, logoURL], 
+    (err, result) => {
+        console.error(err)
+    })
+})
+
+// getting all data from imageusers db
+app.get("/tools/all", (req, res) => {
+    db.query("SELECT * FROM tools ", (err, result) => {
+        if(err) throw err;
+        res.send(result)
+    })
+})
+
 app.put('/all/new-password/:username', async (req, res) => {
     const username = req.params.username
     const newpassword = req.body.newpassword
