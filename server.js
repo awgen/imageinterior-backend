@@ -91,8 +91,13 @@ app.post('/tools', upload.single('logo'), (req, res) => {
 // getting all data from imageusers db
 app.get("/tools/all", (req, res) => {
     db.query("SELECT * FROM tools ", (err, result) => {
+        const tool = result[0]
         if(err) throw err;
         res.send(result)
+        return(
+            res.json({logo: tool.logo})
+        )
+        
     })
 })
 
