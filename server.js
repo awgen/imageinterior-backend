@@ -74,8 +74,8 @@ app.post("/register", async (req, res) => {
     );
 });
 
-app.post('/tools', upload.single('logoImage'), (req, res) => {
-    const logo = req.file.logo
+app.post('/tools', upload.single('logo'), (req, res) => {
+    const logo = req.body.logo
     const logoName = req.body.logoname
     const logoDescrip = req.body.logodescrip
     const logoURL = req.body.logourl
