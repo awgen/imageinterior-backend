@@ -100,6 +100,15 @@ app.get("/tools/all", (req, res) => {
     })
 })
 
+app.delete('/tools/all/:id', (req, res) => {
+    db.query("DELETE FROM tools WHERE id = ?",[req.params.id], (err, result) => {
+        if(!err) 
+        res.send('Deleted Successfully')
+        else
+        console.log(err)
+    })
+})
+
 app.put('/all/new-password/:username', async (req, res) => {
     const username = req.params.username
     const newpassword = req.body.newpassword
