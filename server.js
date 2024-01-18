@@ -24,7 +24,7 @@ const db = mysql.createConnection({
 
 
 app.get('/export-database', (req, res) => {
-    const { host, user, password } = db.config;
+    const { host, user, password, database } = db.config;
   
     // Use mysqldump to export the entire database
     const command = `mysqldump -h ${host} -u ${user} -p${password} --no-tablespaces 
