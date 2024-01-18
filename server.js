@@ -5,7 +5,7 @@ const multer = require('multer');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const upload = multer({ dest: 'uploads/' })
-
+const { exec } = require('child_process');
 
 
 const fs = require('fs'); // Require the fs module
@@ -23,7 +23,31 @@ const db = mysql.createConnection({
 })
 
 
-// getting user logs
+app.get('/export-database', (req, res) => {
+    const { host, user, password } = db.config;
+  
+    // Use mysqldump to export the entire database
+    const command = `mysqldump -h ${host} -u ${user} -p${password} --all-databases > exported_database.sql`;
+  
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error('Error exporting database:', error);
+        res.status(500).send('Internal Server Error');
+      } else {
+        // Send the exported file to the client
+        res.download('exported_database.sql', 'exported_database.sql', (err) => {
+          if (err) {
+            console.error('Error downloading file:', err);
+            res.status(500).send('Internal Server Error');
+          }
+  
+          // Delete the temporary file after sending
+          exec('rm exported_database.sql');
+        });
+      }
+    });
+  });
+
 
 // posting register
 app.post("/register", async (req, res) => {
