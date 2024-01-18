@@ -27,8 +27,8 @@ app.get('/export-database', (req, res) => {
     const { host, user, password } = db.config;
   
     // Use mysqldump to export the entire database
-    const command = `C:/xampp 2/mysql/bin/mysqldump -h ${host} -u ${user} -p${password} --no-tablespaces 
-    b9s1llmzy21ystbkhocz > exported_database.sql`;
+    const command = `mysqldump -h ${host} -u ${user} -p${password} --no-tablespaces 
+    ${database} > exported_database.sql`;
   
     exec(command, (error, stdout, stderr) => {
       if (error) {
