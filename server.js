@@ -25,20 +25,46 @@ const db = mysql.createConnection({
 })
 
 
-app.get('/export-database', (req, res) => {
-   
-   
-        mysqldump({
-            connections: {
-                user: "uug7lgitqfwgeck0",
-                host: "b9s1llmzy21ystbkhocz-mysql.services.clever-cloud.com",
-                password: "Hz9FpR7PilNtJPe9aiCh",
-                database: "b9s1llmzy21ystbkhocz"
+app.get('/export-database', async (req, res) => {
+    try {
+        const {
+            user,
+            host,
+            password,
+            database
+        } = db.config;
+
+        // Use mysqldump to export the entire database
+        await mysqldump({
+            connection: {
+                user,
+                host,
+                password,
+                database
             },
             dumpToFile: './exported_database.sql'
-        })
-    
-  });
+        });
+
+        // Send the exported file to the client
+        res.download('./exported_database.sql', 'exported_database.sql', (err) => {
+            if (err) {
+                console.error('Error downloading file:', err);
+                res.status(500).send('Internal Server Error');
+            }
+
+            // Delete the temporary file after sending
+            fs.unlink('./exported_database.sql', (unlinkErr) => {
+                if (unlinkErr) {
+                    console.error('Error deleting file:', unlinkErr);
+                }
+            });
+        });
+
+    } catch (error) {
+        console.error('Error exporting database:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 
 // posting register
