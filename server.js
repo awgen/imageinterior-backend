@@ -5,7 +5,8 @@ const multer = require('multer');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const upload = multer({ dest: 'uploads/' })
-const { exec } = require('child_process');
+const { exec } = require('node:child_process');
+const mysqldump = require('mysqldump');
 
 
 const fs = require('fs'); // Require the fs module
@@ -14,6 +15,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+
 
 const db = mysql.createConnection({
     user: "uug7lgitqfwgeck0",
@@ -24,29 +26,20 @@ const db = mysql.createConnection({
 
 
 app.get('/export-database', (req, res) => {
-    const { host, user, password, database } = db.config;
-  
-    // Use mysqldump to export the entire database
-    const command = `mysqldump -h ${host} -u ${user} -p${password} --no-tablespaces 
-    ${database} > exported_database.sql`;
-  
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
+    if (error) {
         console.error('Error exporting database:', error);
         res.status(500).send('Internal Server Error');
-      } else {
-        // Send the exported file to the client
-        res.download('exported_database.sql', 'exported_database.sql', (err) => {
-          if (err) {
-            console.error('Error downloading file:', err);
-            res.status(500).send('Internal Server Error');
-          }
-  
-          // Delete the temporary file after sending
-          exec('rm exported_database.sql');
-        });
-      }
-    });
+    }else{
+        mysqldump({
+            connections: {
+                user: "uug7lgitqfwgeck0",
+                host: "b9s1llmzy21ystbkhocz-mysql.services.clever-cloud.com",
+                password: "Hz9FpR7PilNtJPe9aiCh",
+                database: "b9s1llmzy21ystbkhocz"
+            },
+            dumpToFile: './exported_database.sql'
+        })
+    }
   });
 
 
