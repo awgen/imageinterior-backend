@@ -26,10 +26,8 @@ const db = mysql.createConnection({
 
 
 app.get('/export-database', (req, res) => {
-    if (error) {
-        console.error('Error exporting database:', error);
-        res.status(500).send('Internal Server Error');
-    }else{
+   
+   
         mysqldump({
             connections: {
                 user: "uug7lgitqfwgeck0",
@@ -39,7 +37,7 @@ app.get('/export-database', (req, res) => {
             },
             dumpToFile: './exported_database.sql'
         })
-    }
+    
   });
 
 
