@@ -41,6 +41,15 @@ app.post('/import-database', upload.single('sqlFile'), async (req, res) => {
 
         // Read the uploaded file data
         const sqlData = req.file.buffer.toString('utf8');
+        const sqlStatements = sqlData.split(';');
+
+        sqlStatements.forEach((sqlStatement) => {
+            connection.query(sqlStatement, (err, results) => {
+                if (err) {
+                    console.error('Error executing SQL statement:', err);
+                }
+            });
+        });
 
         // Execute the SQL queries to import the database
         connection.query(sqlData, (err, results) => {
