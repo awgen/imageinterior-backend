@@ -17,12 +17,24 @@ app.use(express.json());
 app.use(cors());
 
 
+
 const db = mysql.createConnection({
     user: "uug7lgitqfwgeck0",
     host: "b9s1llmzy21ystbkhocz-mysql.services.clever-cloud.com",
     password: "Hz9FpR7PilNtJPe9aiCh",
     database: "b9s1llmzy21ystbkhocz"
 })
+
+app.post('/upload-sql', () => {
+    const uploadDB = req.body.uploadDB
+
+    db.query("CREATE DATABASE IF NOT EXISTS ?", [uploadDB], 
+    (err, res) => {
+        if(err) throw err;
+        res.send(result)
+    })
+})
+
 
 
 app.get('/export-database', async (req, res) => {
