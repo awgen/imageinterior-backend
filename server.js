@@ -30,7 +30,7 @@ app.post('/upload-sql', (req, res) => {
       return res.status(400).send('No files were uploaded.');
     }
   
-    const sqlFile = req.file;
+    const sqlFile = req.body.uploadFile;
   
     // Save the uploaded file
     sqlFile.mv('./uploads/' + sqlFile.name, (err) => {
