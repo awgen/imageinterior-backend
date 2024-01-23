@@ -4,7 +4,7 @@ const cors = require('cors')
 const multer = require('multer');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
-const upload = multer({ dest: 'uploads/' })
+const multer = require('multer');
 const { exec } = require('node:child_process');
 const mysqldump = require('mysqldump');
 
@@ -25,41 +25,41 @@ const db = mysql.createConnection({
     database: "b9s1llmzy21ystbkhocz"
 })
 
-app.post('/upload-sql', (req, res) => {
-    if (!req.files || Object.keys(req.files).length === 0) {
-      return res.status(400).send('No files were uploaded.');
-    }
-  
-    const sqlFile = req.body.uploadFile;
-  
-    // Save the uploaded file
-    sqlFile.mv('./uploads/' + sqlFile.name, (err) => {
-      if (err) {
-        console.error('Error saving uploaded file:', err);
-        return res.status(500).send('Internal Server Error');
-      }
-  
-      // Read the content of the uploaded SQL file
-      const sqlContent = fs.readFileSync('./uploads/' + sqlFile.name, 'utf-8');
-  
-      // Execute the SQL commands
-      db.query(sqlContent, (err, result) => {
-        if (err) {
-          console.error('Error executing SQL commands:', err);
-          return res.status(500).send('Internal Server Error');
-        }
-  
-        // Delete the uploaded file after executing the SQL commands
-        fs.unlink('./uploads/' + sqlFile.name, (unlinkErr) => {
-          if (unlinkErr) {
-            console.error('Error deleting uploaded file:', unlinkErr);
-          }
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+app.post('/import-database', upload.single('sqlFile'), async (req, res) => {
+    try {
+        const { user, host, password, database } = db.config;
+
+        // Create a connection to the MySQL server
+        const connection = mysql.createConnection({
+            user,
+            host,
+            password,
+            database
         });
-  
-        res.send('SQL commands executed successfully');
-      });
-    });
-  });
+
+        // Read the uploaded file data
+        const sqlData = req.file.buffer.toString('utf8');
+
+        // Execute the SQL queries to import the database
+        connection.query(sqlData, (err, results) => {
+            if (err) {
+                console.error('Error importing database:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+            } else {
+                res.status(200).json({ message: 'Database imported successfully' });
+            }
+
+            // Close the connection after importing
+            connection.end();
+        });
+    } catch (error) {
+        console.error('Error importing database:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
 
 
