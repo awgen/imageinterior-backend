@@ -36,7 +36,8 @@ app.post('/import-database', upload.single('sqlFile'), async (req, res) => {
             user,
             host,
             password,
-            database
+            database,
+            multipleStatements: true
         });
 
         // Read the uploaded file data
