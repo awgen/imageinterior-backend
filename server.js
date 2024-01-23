@@ -28,7 +28,7 @@ const db = mysql.createConnection({
 app.post('/upload-sql', (req, res) => {
     const uploadDB = req.body.uploadDB
 
-    db.query("CREATE DATABASE IF NOT EXISTS ?", [uploadDB], 
+    db.query("CREATE DATABASE ?", [uploadDB], 
     (err, res) => {
         if(err) throw err;
         res.send(result)
