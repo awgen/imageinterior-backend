@@ -26,14 +26,40 @@ const db = mysql.createConnection({
 })
 
 app.post('/upload-sql', (req, res) => {
-    const uploadDB = req.body.uploadDB
-
-    db.query("CREATE DATABASE ?", [uploadDB], 
-    (err, res) => {
-        if(err) throw err;
-        res.send(result)
-    })
-})
+    if (!req.files || Object.keys(req.files).length === 0) {
+      return res.status(400).send('No files were uploaded.');
+    }
+  
+    const sqlFile = req.body.uploadDB;
+  
+    // Save the uploaded file
+    sqlFile.mv('./uploads/' + sqlFile.name, (err) => {
+      if (err) {
+        console.error('Error saving uploaded file:', err);
+        return res.status(500).send('Internal Server Error');
+      }
+  
+      // Read the content of the uploaded SQL file
+      const sqlContent = fs.readFileSync('./uploads/' + sqlFile.name, 'utf-8');
+  
+      // Execute the SQL commands
+      db.query(sqlContent, (err, result) => {
+        if (err) {
+          console.error('Error executing SQL commands:', err);
+          return res.status(500).send('Internal Server Error');
+        }
+  
+        // Delete the uploaded file after executing the SQL commands
+        fs.unlink('./uploads/' + sqlFile.name, (unlinkErr) => {
+          if (unlinkErr) {
+            console.error('Error deleting uploaded file:', unlinkErr);
+          }
+        });
+  
+        res.send('SQL commands executed successfully');
+      });
+    });
+  });
 
 
 
