@@ -45,30 +45,26 @@ app.post('/import-database', upload.single('sqlFile'), async (req, res) => {
         const sqlStatements = sqlData.split(';');
 
         sqlStatements.forEach((sqlStatement) => {
-            connection.query(sqlStatement, (err, results) => {
-                if (err) {
-                    console.error('Error executing SQL statement:', err);
-                }
-            });
-        });
-
-        // Execute the SQL queries to import the database
-        connection.query(sqlData, (err, results) => {
-            if (err) {
-                console.error('Error importing database:', err);
-                res.status(500).json({ error: 'Internal Server Error' });
-            } else {
-                res.status(200).json({ message: 'Database imported successfully' });
+            // Check for empty statements
+            if (sqlStatement.trim() !== '') {
+                connection.query(sqlStatement, (err, results) => {
+                    if (err) {
+                        console.error('Error executing SQL statement:', err);
+                    }
+                });
             }
-
-            // Close the connection after importing
-            connection.end();
         });
+
+        // Close the connection after importing
+        connection.end();
+
+        res.status(200).json({ message: 'Database imported successfully' });
     } catch (error) {
         console.error('Error importing database:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
 
 
 
