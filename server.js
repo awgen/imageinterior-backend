@@ -20,8 +20,8 @@ app.use(cors());
 const db = mysql.createConnection({
     user: "uofvntbm00d0ulsi",
     host: "b79spce0wvcyy1tdfmxh-mysql.services.clever-cloud.com",
-    password: "Hz9FpR7PilNtJPe9aiCh",
-    database: "CEybMUFVgoF5xFEnVf6m"
+    password: "CEybMUFVgoF5xFEnVf6m",
+    database: "b79spce0wvcyy1tdfmxh"
 })
 
 const storage = multer.memoryStorage();
